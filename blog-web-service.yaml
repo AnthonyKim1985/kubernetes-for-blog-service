@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-for-blog-web-service
+  namespace: blog
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: blog-web-service
+  template:
+    metadata:
+      name: blog-web-service
+      labels:
+        app: blog-web-service
+    spec:
+      containers:
+        - name: blog-web-service
+          image: hyuk0628/blog-web-service.release.latest
+          command: ["/bin/bash"]
+          args: ["/entrypoint.sh", "prod"]
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-for-blog-web-service
+  namespace: blog
+spec:
+  ports:
+    - name: blog-web-service-port
+      port: 80
+      targetPort: 80
+  selector:
+    app: blog-web-service
+  type: ClusterIP
