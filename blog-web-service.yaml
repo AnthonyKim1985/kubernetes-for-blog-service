@@ -17,6 +17,7 @@ spec:
       containers:
         - name: blog-web-service
           image: hyuk0628/blog-web-service:release.latest
+          imagePullPolicy: Always
           command: ["/bin/bash"]
           args: ["/entrypoint.sh", "prod"]
           ports:
