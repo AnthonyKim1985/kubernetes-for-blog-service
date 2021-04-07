@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-for-blog-rabbitmq
+  namespace: blog
+spec:
+  selector:
+    matchLabels:
+      app: blog-rabbitmq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: blog-rabbitmq
+      labels:
+        app: blog-rabbitmq
+    spec:
+      containers:
+        - name: blog-rabbitmq
+          image: "rabbitmq:3-management"
+          env:
+            - name: RABBITMQ_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: blog-rabbitmq-secret
+                  key: erlangCookie
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: blog-rabbitmq-secret
+                  key: username
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: blog-rabbitmq-secret
+                  key: password
+            - name: RABBITMQ_DEFAULT_VHOST
+              valueFrom:
+                secretKeyRef:
+                  name: blog-rabbitmq-secret
+                  key: vhost
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-for-blog-rabbitmq
+  namespace: blog
+spec:
+  ports:
+    - name: blog-rabbitmq-port
+      port: 15656
+      targetPort: 5672
+    - name: blog-rabbitmq-web-port
+      port: 17272
+      targetPort: 15672
+  selector:
+    app: blog-rabbitmq
+  type: NodePort

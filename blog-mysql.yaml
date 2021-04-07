@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-for-blog-mysql
+  namespace: blog
+spec:
+  selector:
+    matchLabels:
+      app: blog-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: blog-mysql
+      labels:
+        app: blog-mysql
+    spec:
+      containers:
+        - name: blog-mysql
+          image: "mysql:5.7"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mysql-secret
+                  key: rootPassword
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: blog-mysql-persistent-storage
+              mountPath: /var/lib/mysql
+            - name: blog-mysql-init
+              mountPath: /docker-entrypoint-initdb.d/init.sql
+            - name: blog-mysql-config
+              mountPath: /etc/mysql/my.cnf
+      volumes:
+        - name: blog-mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: blog-mysql-pv-claim
+        - name: blog-mysql-init
+          hostPath:
+            path: resources/mysql/init.sql
+            type: FileOrCreate
+        - name: blog-mysql-config
+          hostPath:
+            path: resources/mysql/my.cnf
+            type: FileOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-for-blog-mysql
+  namespace: blog
+spec:
+  ports:
+    - name: blog-mysql-port
+      port: 13636
+      targetPort: 3306
+  selector:
+    app: blog-mysql
+  type: NodePort

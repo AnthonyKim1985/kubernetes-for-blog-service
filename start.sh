@@ -35,7 +35,19 @@ function init() {
 init
 
 function start() {
-    for file in $(ls *.yaml); do
+    if [[ ${args[0]} -eq 0 ]]; then
+        kubectl apply -f blog-mysql-pv.yaml
+        kubectl apply -f blog-mysql.yaml
+        kubectl apply -f blog-mongo-pv.yaml
+        kubectl apply -f blog-mongo.yaml
+    else
+        sudo kubectl apply -f blog-mysql-pv.yaml
+        sudo kubectl apply -f blog-mysql.yaml
+        sudo kubectl apply -f blog-mongo-pv.yaml
+        sudo kubectl apply -f blog-mongo.yaml
+    fi
+    
+    for file in $(ls *-service.yaml); do
         echo $file
         sed "s/@{registry_id}/${REGISTRY_ID}/g" ${file} >.${file}_0
         sed "s/@{tag}/${TAG}/g" .${file}_0 >.${file}_1

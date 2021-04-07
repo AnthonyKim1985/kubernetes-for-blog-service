@@ -1,0 +1,9 @@
+CREATE DATABASE blogdb CHARACTER SET utf8 COLLATE utf8_general_ci;
+  
+CREATE USER 'hyuk0628'@'%' IDENTIFIED BY 'rlawlsgur!@12' PASSWORD EXPIRE NEVER;
+GRANT ALL PRIVILEGES ON blogdb.* TO 'hyuk0628'@'%';
+
+CREATE USER 'replica'@'%' IDENTIFIED BY 'rlawlsgur!@12' PASSWORD EXPIRE NEVER;
+GRANT REPLICATION SLAVE ON *.* TO 'replica'@'%';
+ 
+flush privileges;

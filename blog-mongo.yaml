@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-for-blog-mongo
+  namespace: blog
+spec:
+  selector:
+    matchLabels:
+      app: blog-mongo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: blog-mongo
+      labels:
+        app: blog-mongo
+    spec:
+      containers:
+        - name: blog-mongo
+          image: "mongo:4.2"
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: initdbRootUsername
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: initdbRootPassword
+            - name: MONGO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: mongoHost
+            - name: MONGO_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: mongoPort
+            - name: MONGO_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: mongoRootUsername
+            - name: MONGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: mongoRootPassword
+            - name: APP_MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: appMongoUsername
+            - name: APP_MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: appMongoPassword
+            - name: APP_MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: blog-mongo-secret
+                  key: appMongoDb
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: blog-mongo-persistent-storage
+              mountPath: /data/db
+            - name: blog-mongo-init
+              mountPath: /docker-entrypoint-initdb.d/init.sh
+      volumes:
+        - name: blog-mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: blog-mongo-pv-claim
+        - name: blog-mongo-init
+          hostPath:
+            path: resources/mongo/init.sh
+            type: FileOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-for-blog-mongo
+  namespace: blog
+spec:
+  ports:
+    - name: blog-mongo-port
+      port: 27070
+      targetPort: 27017
+  selector:
+    app: blog-mongo
+  type: NodePort
