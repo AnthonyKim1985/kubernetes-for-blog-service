@@ -4,7 +4,7 @@ metadata:
   name: deployment-for-blog-web-service
   namespace: blog
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: blog-web-service

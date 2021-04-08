@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-for-blog-redis
+  namespace: blog
+spec:
+  selector:
+    matchLabels:
+      app: blog-redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: blog-redis
+      labels:
+        app: blog-redis
+    spec:
+      containers:
+        - name: blog-redis
+          image: "redis:5.0-alpine"
+          args: ["--requirepass", "$(REDIS_PASS)"]
+          env:
+            - name: REDIS_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: blog-redis-secret
+                  key: password
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: blog-redis-persistent-storage
+              mountPath:
+      volumes:
+        - name: blog-redis-persistent-storage
+          persistentVolumeClaim:
+            claimName: blog-redis-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-for-blog-redis
+  namespace: blog
+spec:
+  ports:
+    - name: blog-redis-port
+      port: 16363
+      targetPort: 6379
+  selector:
+    app: blog-redis
+  type: NodePort

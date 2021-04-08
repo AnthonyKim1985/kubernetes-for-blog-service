@@ -28,11 +28,9 @@ init
 
 function stop() {
     if [[ ${args[0]} -eq 0 ]]; then
-        kubectl delete service svc-for-blog-web-service -n blog
-        kubectl delete deployment deployment-for-blog-web-service -n blog
+        kubectl delete ./*.yaml
     else
-        sudo kubectl delete service svc-for-blog-web-service -n blog
-        sudo kubectl delete deployment deployment-for-blog-web-service -n blog
+        sudo kubectl delete ./*.yaml
     fi
 
     rm .*.yaml

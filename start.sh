@@ -40,11 +40,15 @@ function start() {
         kubectl apply -f blog-mysql.yaml
         kubectl apply -f blog-mongo-pv.yaml
         kubectl apply -f blog-mongo.yaml
+        kubectl apply -f blog-redis-pv.yaml
+        kubectl apply -f blog-redis.yaml
     else
         sudo kubectl apply -f blog-mysql-pv.yaml
         sudo kubectl apply -f blog-mysql.yaml
         sudo kubectl apply -f blog-mongo-pv.yaml
         sudo kubectl apply -f blog-mongo.yaml
+        sudo kubectl apply -f blog-redis-pv.yaml
+        sudo kubectl apply -f blog-redis.yaml
     fi
     
     for file in $(ls *-service.yaml); do
