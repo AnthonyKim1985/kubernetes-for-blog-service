@@ -29,7 +29,7 @@ spec:
             - containerPort: 6379
           volumeMounts:
             - name: blog-redis-persistent-storage
-              mountPath:
+              mountPath: /data/db
       volumes:
         - name: blog-redis-persistent-storage
           persistentVolumeClaim:

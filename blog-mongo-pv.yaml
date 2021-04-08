@@ -6,13 +6,13 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: blog-mongo-volume
+  storageClassName: ""
   capacity:
-    storage: 3Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data1/mongo"
+    path: "/Users/anthonykim/data1/mongo"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -21,9 +21,9 @@ metadata:
   name: blog-mongo-pv-claim
   namespace: blog
 spec:
-  storageClassName: blog-mongo-volume
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 3Gi
+      storage: 1Gi

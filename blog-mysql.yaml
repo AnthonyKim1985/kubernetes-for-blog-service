@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: blog-mysql
-          image: "mysql:5.7"
+          image: "mariadb:10"
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -39,11 +39,11 @@ spec:
             claimName: blog-mysql-pv-claim
         - name: blog-mysql-init
           hostPath:
-            path: resources/mysql/init.sql
+            path: /Users/anthonykim/KubernetesProjects/kubernetes-for-blog-service/resources/mysql/init.sql
             type: FileOrCreate
         - name: blog-mysql-config
           hostPath:
-            path: resources/mysql/my.cnf
+            path: /Users/anthonykim/KubernetesProjects/kubernetes-for-blog-service/resources/mysql/my.cnf
             type: FileOrCreate
 ---
 apiVersion: v1

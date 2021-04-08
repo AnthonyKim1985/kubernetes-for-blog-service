@@ -77,7 +77,7 @@ spec:
             claimName: blog-mongo-pv-claim
         - name: blog-mongo-init
           hostPath:
-            path: resources/mongo/init.sh
+            path: /Users/anthonykim/KubernetesProjects/kubernetes-for-blog-service/resources/mongo/init.sh
             type: FileOrCreate
 ---
 apiVersion: v1

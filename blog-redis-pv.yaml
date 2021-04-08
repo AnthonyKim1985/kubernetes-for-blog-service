@@ -6,13 +6,13 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: blog-redis-volume
+  storageClassName: ""
   capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data1/redis"
+    path: "/Users/anthonykim/data1/redis"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -21,7 +21,7 @@ metadata:
   name: blog-redis-pv-claim
   namespace: blog
 spec:
-  storageClassName: blog-redis-volume
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:
