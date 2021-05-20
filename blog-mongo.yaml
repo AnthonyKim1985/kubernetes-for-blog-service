@@ -92,4 +92,4 @@ spec:
       targetPort: 27017
   selector:
     app: blog-mongo
-  type: NodePort
+  type: LoadBalancer

@@ -58,4 +58,4 @@ spec:
       targetPort: 15672
   selector:
     app: blog-rabbitmq
-  type: NodePort
+  type: LoadBalancer

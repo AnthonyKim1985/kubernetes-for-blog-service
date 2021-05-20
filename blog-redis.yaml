@@ -47,4 +47,4 @@ spec:
       targetPort: 6379
   selector:
     app: blog-redis
-  type: NodePort
+  type: LoadBalancer

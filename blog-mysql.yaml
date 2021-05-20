@@ -58,4 +58,4 @@ spec:
       targetPort: 3306
   selector:
     app: blog-mysql
-  type: NodePort
+  type: LoadBalancer
